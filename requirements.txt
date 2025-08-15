@@ -1,0 +1,5 @@
+Flask
+pytest
+flask-restx
+Flask-JWT-Extended
+Werkzeug
