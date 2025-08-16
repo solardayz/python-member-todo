@@ -43,7 +43,7 @@
 
 2.  **Flask 애플리케이션 실행**:
     ```bash
-    python app.py
+    python run.py
     ```
     애플리케이션은 일반적으로 `http://127.0.0.1:5000/`에서 실행됩니다.
 

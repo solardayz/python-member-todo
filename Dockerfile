@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # 앱이 실행될 포트를 5000번으로 지정합니다.
-EXPOSE 5000
+EXPOSE 5001
 
 # 앱을 실행하는 명령어를 정의합니다.
-CMD ["python", "app.py"]
+CMD ["python", "run.py"]
