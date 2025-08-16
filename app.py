@@ -32,4 +32,4 @@ api.add_namespace(users_ns)
 api.add_namespace(todos_ns)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
