@@ -24,8 +24,10 @@ class UserService:
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat()
         }
-        self.user_repo.add_user(user_data)
-        return user_data, None
+        user, error = self.user_repo.add_user(user_data)
+        if error:
+            return None, error
+        return user, None
 
     def authenticate_user(self, username, password):
         user = self.user_repo.get_user_by_username(username)

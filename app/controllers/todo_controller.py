@@ -41,6 +41,8 @@ class TodoList(Resource):
         current_user_id = get_jwt_identity()
         data = request.json
         todo = todo_service.create_todo(current_user_id, data['description'], data.get('status', 'pending'))
+        if todo is None:
+            todos_ns.abort(500, "Failed to create todo item")
         return todo, 201
 
 @todos_ns.route('/<string:todo_id>')

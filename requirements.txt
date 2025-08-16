@@ -4,3 +4,4 @@ flask-restx
 Flask-JWT-Extended
 Werkzeug
 python-dotenv
+PynamoDB

@@ -1,3 +1,6 @@
+# 이 파일은 이제 DynamoDB를 데이터 영속성 계층으로 사용하므로 더 이상 사용되지 않습니다.
+# 사용자 요청에 따라 여기에 유지됩니다.
+
 import uuid
 from datetime import datetime
 from werkzeug.security import generate_password_hash

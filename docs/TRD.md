@@ -6,7 +6,8 @@
 *   Flask-RESTX 라이브러리를 활용하여 API 라우팅, 요청/응답 모델링 및 Swagger UI 자동화를 구현합니다.
 *   **사용자 인증 및 인가는 JWT(JSON Web Token)를 기반으로 처리합니다.**
 *   **`Flask-JWT-Extended` 라이브러리를 사용하여 JWT의 생성, 검증 및 사용자 식별을 관리합니다.**
-*   초기 버전에서는 별도의 데이터베이스 없이, 서버 메모리(In-memory Dictionary/List)를 사용하여 **사용자와 할 일 데이터**를 임시 저장합니다. (서버 재시작 시 데이터 초기화)
+*   **AWS DynamoDB**를 사용하여 사용자 및 할 일 데이터를 영구적으로 저장합니다. PynamoDB 라이브러리를 통해 DynamoDB와 상호작용합니다.
+*   **DynamoDB Local**을 사용하여 로컬 개발 및 테스트 환경을 구축할 수 있습니다.
 
 **2. 기술 스택 (Technology Stack)**
 
@@ -42,15 +43,28 @@
 **4. 데이터 모델 (Data Model)**
 
 *   **사용자 객체 (User):**
-    *   `id` (integer): 고유 식별자.
-    *   `username` (string, required): 사용자 ID.
+    *   `id` (string): 고유 식별자 (Partition Key). UUID로 생성됩니다.
+    *   `username` (string, required): 사용자 ID. `username_index` (Global Secondary Index)의 Partition Key로 사용됩니다.
+    *   `email` (string, required): 사용자 이메일.
     *   `password_hash` (string, required): 해싱된 비밀번호. **절대 평문(Plain Text)으로 저장하지 않음.**
+    *   `created_at` (datetime): 사용자 생성 시간.
+    *   `updated_at` (datetime): 사용자 정보 마지막 업데이트 시간.
 *   **할 일 객체 (Todo):**
-    *   `id` (integer): 고유 식별자.
-    *   **`user_id` (integer): 할 일을 소유한 사용자의 ID.**
-    *   `title` (string, required): 할 일의 제목.
-    *   `description` (string): 할 일의 상세 설명.
-    *   `is_done` (boolean): 완료 여부. 기본값은 `false`.
+    *   `id` (string): 고유 식별자 (Partition Key). UUID로 생성됩니다.
+    *   `user_id` (string, required): 할 일을 소유한 사용자의 ID. `user_id_index` (Global Secondary Index)의 Partition Key로 사용됩니다.
+    *   `description` (string, required): 할 일의 상세 설명.
+    *   `status` (string, required): 할 일의 상태 (예: `pending`, `completed`).
+    *   `created_at` (datetime): 할 일 생성 시간. `user_id_index`의 Sort Key로 사용됩니다.
+    *   `updated_at` (datetime): 할 일 정보 마지막 업데이트 시간.
+
+**DynamoDB 테이블 및 인덱스:**
+
+*   **`users` 테이블 (UserModel):**
+    *   Primary Key: `id` (Partition Key)
+    *   Global Secondary Index: `username_index` (Partition Key: `username`) - 사용자 이름으로 빠르게 조회하기 위함.
+*   **`todos` 테이블 (TodoModel):**
+    *   Primary Key: `id` (Partition Key)
+    *   Global Secondary Index: `user_id_index` (Partition Key: `user_id`, Sort Key: `created_at`) - 특정 사용자의 모든 할 일을 생성 시간 순으로 조회하기 위함.
 
 **5. 에러 처리 (Error Handling)**
 

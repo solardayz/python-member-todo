@@ -12,6 +12,14 @@ class Config:
     DEBUG = False
     TESTING = False
 
+    # AWS DynamoDB Configuration
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_REGION = os.environ.get('AWS_REGION')
+    DYNAMODB_USERS_TABLE_NAME = os.environ.get('DYNAMODB_USERS_TABLE_NAME')
+    DYNAMODB_TODOS_TABLE_NAME = os.environ.get('DYNAMODB_TODOS_TABLE_NAME')
+    DYNAMODB_DDL_ENABLED = os.environ.get('DYNAMODB_DDL', 'True').lower() == 'true'
+
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True

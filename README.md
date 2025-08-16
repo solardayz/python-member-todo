@@ -32,6 +32,46 @@
 3.  **의존성 설치**:
     ```bash
     pip install -r requirements.txt
+
+## DynamoDB 설정
+
+이 애플리케이션은 데이터 저장을 위해 AWS DynamoDB를 사용합니다. 로컬 개발 환경에서는 DynamoDB Local을 사용할 수 있습니다.
+
+1.  **환경 변수 설정 (.env 파일)**:
+    프로젝트 루트 디렉토리에 `.env` 파일을 생성하고 다음 환경 변수를 설정합니다. 이 변수들은 AWS 자격 증명과 DynamoDB 테이블 이름을 정의합니다.
+
+    ```
+    # AWS Credentials (for production or remote DynamoDB)
+    AWS_ACCESS_KEY_ID=your_aws_access_key_id
+    AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+    AWS_REGION=your_aws_region # 예: ap-northeast-2
+
+    # DynamoDB Table Names
+    DYNAMODB_USERS_TABLE_NAME=users-table-dev
+    DYNAMODB_TODOS_TABLE_NAME=todos-table-dev
+
+    # Flask Environment
+    FLASK_ENV=development
+    SECRET_KEY=super-secret-key
+    JWT_SECRET_KEY=super-jwt-secret-key
+    ```
+    *   **로컬 DynamoDB 사용 시**: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`은 실제 AWS 자격 증명이 아니어도 됩니다. `dummy` 값 등을 사용해도 DynamoDB Local에 연결됩니다. 중요한 것은 `DYNAMODB_USERS_TABLE_NAME`과 `DYNAMODB_TODOS_TABLE_NAME`을 설정하는 것입니다.
+
+2.  **DynamoDB Local 실행 (Docker 권장)**:
+    로컬에서 DynamoDB를 실행하려면 Docker를 사용하는 것이 가장 편리합니다.
+
+    ```bash
+    docker run -d -p 8000:8000 --name dynamodb-local amazon/dynamodb-local
+    ```
+    이 명령어는 DynamoDB Local 컨테이너를 백그라운드에서 실행하고, 로컬 머신의 8000번 포트를 컨테이너의 8000번 포트와 연결합니다.
+
+3.  **DynamoDB 테이블 생성**:
+    애플리케이션이 사용할 DynamoDB 테이블을 생성해야 합니다. 다음 스크립트를 실행하여 `users` 및 `todos` 테이블을 생성할 수 있습니다.
+
+    ```bash
+    python app/repositories/dynamodb_models.py
+    ```
+    이 스크립트는 `.env` 파일에 설정된 테이블 이름으로 DynamoDB 테이블을 생성합니다. 테이블이 이미 존재하면 건너뜁니다.
     ```
 
 ## 애플리케이션 실행
