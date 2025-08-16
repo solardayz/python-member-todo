@@ -1,13 +1,16 @@
+import os
 from flask import Flask
 from flask_restx import Api
 from flask_jwt_extended import JWTManager
 
+from config import config
 from app.controllers.auth_controller import auth_ns
 from app.controllers.user_controller import users_ns
 from app.controllers.todo_controller import todos_ns
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this in production!
+config_name = os.getenv('FLASK_ENV', 'default')
+app.config.from_object(config[config_name])
 
 authorizations = {
     'apiKey': {
@@ -32,4 +35,4 @@ api.add_namespace(users_ns)
 api.add_namespace(todos_ns)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=app.config['DEBUG'])
