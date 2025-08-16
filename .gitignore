@@ -7,6 +7,9 @@ venv/
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
 
 # OS generated files
 .DS_Store

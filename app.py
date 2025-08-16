@@ -35,4 +35,4 @@ api.add_namespace(users_ns)
 api.add_namespace(todos_ns)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=app.config['DEBUG'])
+    app.run(host='0.0.0.0', port=5001, debug=app.config['DEBUG'])
